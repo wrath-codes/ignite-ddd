@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --ext .ts src --fix"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "@rocketseat/eslint-config": "^2.0.1",
     "@types/node": "^20.4.2",
     "eslint": "^8.44.0",
+    "eslint-plugin-vitest-globals": "^1.4.0",
     "typescript": "^5.1.6",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.33.0"
