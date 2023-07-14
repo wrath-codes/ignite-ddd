@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@rocketseat/eslint-config": "^2.0.1",
     "@types/node": "^20.4.2",
     "eslint": "^8.44.0",
