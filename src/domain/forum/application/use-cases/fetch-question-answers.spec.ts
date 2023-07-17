@@ -1,6 +1,6 @@
 import { FetchQuestionAnswersUseCase } from '@/domain/forum/application/use-cases/fetch-question-answers'
-import { InMemoryAnswersRepository } from './in-memory-answers-repository'
-import { InMemoryQuestionsRepository } from './in-memory-questions-repository'
+import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository'
+import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'

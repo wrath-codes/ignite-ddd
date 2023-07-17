@@ -14,7 +14,7 @@ export function makeQuestion(
     {
       title: faker.lorem.sentence(),
       content: faker.lorem.text(),
-      authorId: new UniqueEntityID('1'),
+      authorId: new UniqueEntityID(),
       ...override,
     },
     id,
