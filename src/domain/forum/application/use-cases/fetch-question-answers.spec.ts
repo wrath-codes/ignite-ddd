@@ -36,15 +36,13 @@ describe('Fetch Question Answers', () => {
     await answersRepository.create(answer_01)
     await answersRepository.create(answer_02)
 
-    const { answers } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toValue(),
       page: 1,
     })
 
-    expect(answers[0].id).toBeTruthy()
-    expect(answers[1].id).toBeTruthy()
-    expect(answers).toHaveLength(2)
-    expect(answers).toMatchObject([
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.answers).toMatchObject([
       expect.objectContaining({
         id: answer_01.id,
       }),
@@ -68,12 +66,12 @@ describe('Fetch Question Answers', () => {
       await answersRepository.create(answer)
     }
 
-    const { answers } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toValue(),
       page: 2,
     })
 
-    expect(answers[0].id).toBeTruthy()
-    expect(answers).toHaveLength(2)
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.answers).toHaveLength(2)
   })
 })

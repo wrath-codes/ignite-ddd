@@ -1,6 +1,7 @@
 import { CommentOnQuestionUseCase } from './comment-on-question'
 import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments-repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeQuestion } from 'test/factories/make-question'
 
@@ -27,24 +28,26 @@ describe('Comment on question', () => {
     )
     await questionRepository.create(newQuestion)
 
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-01',
       questionId: 'question-01',
       content: 'New Content',
     })
 
+    expect(result.isRight()).toBe(true)
     expect(questionCommentsRepository.items[0]).toMatchObject({
       content: 'New Content',
     })
   })
 
   it('should not be able to comment on a question if it not exists', async () => {
-    await expect(
-      sut.execute({
-        authorId: 'author-01',
-        questionId: 'question-01',
-        content: 'New Content',
-      }),
-    ).rejects.toThrow('Question not found')
+    const result = await sut.execute({
+      authorId: 'author-01',
+      questionId: 'question-01',
+      content: 'New Content',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 })

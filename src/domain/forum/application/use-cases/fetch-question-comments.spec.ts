@@ -37,15 +37,14 @@ describe('Fetch Question Comments', () => {
     await questionCommentsRepository.create(questionComment_01)
     await questionCommentsRepository.create(questionComment_02)
 
-    const { questionComments } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toValue(),
       page: 1,
     })
 
-    expect(questionComments[0].id).toBeTruthy()
-    expect(questionComments[1].id).toBeTruthy()
-    expect(questionComments).toHaveLength(2)
-    expect(questionComments).toMatchObject([
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.questionComments).toHaveLength(2)
+    expect(result.value?.questionComments).toMatchObject([
       expect.objectContaining({
         id: questionComment_01.id,
       }),
@@ -69,15 +68,14 @@ describe('Fetch Question Comments', () => {
       await questionCommentsRepository.create(questionComment)
     }
 
-    const { questionComments } = await sut.execute({
+    const result = await sut.execute({
       questionId: question.id.toValue(),
       page: 2,
     })
 
-    expect(questionComments[0].id).toBeTruthy()
-    expect(questionComments[1].id).toBeTruthy()
-    expect(questionComments).toHaveLength(2)
-    expect(questionComments).toMatchObject([
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.questionComments).toHaveLength(2)
+    expect(result.value?.questionComments).toMatchObject([
       expect.objectContaining({
         id: new UniqueEntityID('question-comment-21'),
       }),

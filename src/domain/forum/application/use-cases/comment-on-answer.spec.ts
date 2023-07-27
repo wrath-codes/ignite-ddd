@@ -1,6 +1,7 @@
 import { CommentOnAnswerUseCase } from './comment-on-answer'
 import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answer-comments-repository'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswer } from 'test/factories/make-answer'
 
@@ -24,24 +25,26 @@ describe('Comment on answer', () => {
     )
     await answerRepository.create(newAnswer)
 
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-01',
       answerId: 'answer-01',
       content: 'New Content',
     })
 
+    expect(result.isRight()).toBe(true)
     expect(answerCommentsRepository.items[0]).toMatchObject({
       content: 'New Content',
     })
   })
 
   it('should not be able to comment on a answer if it not exists', async () => {
-    await expect(
-      sut.execute({
-        authorId: 'author-01',
-        answerId: 'answer-01',
-        content: 'New Content',
-      }),
-    ).rejects.toThrow('Answer not found')
+    const result = await sut.execute({
+      authorId: 'author-01',
+      answerId: 'answer-01',
+      content: 'New Content',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 })

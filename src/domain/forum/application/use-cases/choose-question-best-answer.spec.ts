@@ -1,6 +1,8 @@
 import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
+import { NotAllowedError } from './errors/not-allowed-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'
@@ -37,23 +39,25 @@ describe('Choose Question Best Answer', () => {
     )
     await answersRepository.create(answer)
 
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-01',
       answerId: 'answer-01',
     })
 
+    expect(result.isRight()).toBe(true)
     expect(questionRepository.items[0]).toMatchObject({
       bestAnswerId: new UniqueEntityID('answer-01'),
     })
   })
 
   it('should not be able to choose a question best answer if it not exists', async () => {
-    await expect(
-      sut.execute({
-        authorId: 'author-01',
-        answerId: 'answer-01',
-      }),
-    ).rejects.toThrow('Answer not found')
+    const result = await sut.execute({
+      authorId: 'author-01',
+      answerId: 'answer-01',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to choose a question best answer if the question not exists', async () => {
@@ -65,12 +69,13 @@ describe('Choose Question Best Answer', () => {
     )
     await answersRepository.create(answer)
 
-    await expect(
-      sut.execute({
-        authorId: 'author-01',
-        answerId: 'answer-01',
-      }),
-    ).rejects.toThrow('Question not found')
+    const result = await sut.execute({
+      authorId: 'author-01',
+      answerId: 'answer-01',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it('should not be able to choose another user question best answer', async () => {
@@ -91,11 +96,12 @@ describe('Choose Question Best Answer', () => {
     )
     await answersRepository.create(answer)
 
-    await expect(
-      sut.execute({
-        authorId: 'author-02',
-        answerId: 'answer-01',
-      }),
-    ).rejects.toThrow('Not Allowed')
+    const result = await sut.execute({
+      authorId: 'author-02',
+      answerId: 'answer-01',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 })

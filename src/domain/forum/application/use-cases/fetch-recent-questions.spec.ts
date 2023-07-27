@@ -16,12 +16,12 @@ describe('Fetch Recent Questions', () => {
     const newQuestion = makeQuestion({}, new UniqueEntityID('question-01'))
     await questionsRepository.create(newQuestion)
 
-    const { questions } = await sut.execute({
+    const result = await sut.execute({
       page: 1,
     })
 
-    expect(questions[0].id).toBeTruthy()
-    expect(questions[0].id.toValue()).toEqual('question-01')
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.questions[0].id.toValue()).toEqual('question-01')
   })
 
   it('should be able to fetch recent questions with pagination', async () => {
@@ -30,11 +30,11 @@ describe('Fetch Recent Questions', () => {
       await questionsRepository.create(newQuestion)
     }
 
-    const { questions } = await sut.execute({
+    const result = await sut.execute({
       page: 2,
     })
 
-    expect(questions[0].id).toBeTruthy()
-    expect(questions).toHaveLength(2)
+    expect(result.isRight()).toBe(true)
+    expect(result.value?.questions).toHaveLength(2)
   })
 })

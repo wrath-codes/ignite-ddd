@@ -1,5 +1,5 @@
 import { CreateQuestionUseCase } from './create-question'
-import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository'
+import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
 
 let questionsRepository: InMemoryQuestionsRepository
 let sut: CreateQuestionUseCase
@@ -11,13 +11,13 @@ describe('Create Question', () => {
   })
 
   it('should be able to create a question', async () => {
-    const { question } = await sut.execute({
+    const result = await sut.execute({
       title: 'Nova pergunta',
       content: 'Nova resposta',
       authorId: '1',
     })
 
-    expect(question.id).toBeTruthy()
-    expect(questionsRepository.items[0].id).toEqual(question.id)
+    expect(result.isRight()).toBe(true)
+    expect(questionsRepository.items).toHaveLength(1)
   })
 })
