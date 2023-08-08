@@ -1,4 +1,5 @@
 import { CommentOnAnswerUseCase } from './comment-on-answer'
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments-repository'
 import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answer-comments-repository'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
@@ -7,11 +8,15 @@ import { makeAnswer } from 'test/factories/make-answer'
 
 let answerRepository: InMemoryAnswersRepository
 let answerCommentsRepository: InMemoryAnswerCommentsRepository
+let answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let sut: CommentOnAnswerUseCase
 
 describe('Comment on answer', () => {
   beforeEach(() => {
-    answerRepository = new InMemoryAnswersRepository()
+    answerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
+    answerRepository = new InMemoryAnswersRepository(
+      answerAttachmentsRepository,
+    )
     answerCommentsRepository = new InMemoryAnswerCommentsRepository()
     sut = new CommentOnAnswerUseCase(answerRepository, answerCommentsRepository)
   })

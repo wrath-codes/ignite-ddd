@@ -1,4 +1,5 @@
 import { DeleteAnswerUseCase } from './delete-answer'
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments-repository'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository'
 import { NotAllowedError } from './errors/not-allowed-error'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
@@ -6,11 +7,15 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeAnswer } from 'test/factories/make-answer'
 
 let answersRepository: InMemoryAnswersRepository
+let answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let sut: DeleteAnswerUseCase
 
 describe('Delete Answer', () => {
   beforeEach(() => {
-    answersRepository = new InMemoryAnswersRepository()
+    answerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
+    answersRepository = new InMemoryAnswersRepository(
+      answerAttachmentsRepository,
+    )
     sut = new DeleteAnswerUseCase(answersRepository)
   })
 
