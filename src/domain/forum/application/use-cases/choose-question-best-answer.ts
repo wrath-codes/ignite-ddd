@@ -1,10 +1,10 @@
 import { Either, left, right } from '@/core/either'
 
 import { AnswersRepository } from '../repositories/answers-repository'
-import { NotAllowedError } from './errors/not-allowed-error'
-import { Question } from '../../enterprise/entities/question'
+import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
+import { Question } from '@/domain/forum/enterprise/entities/question'
 import { QuestionsRepository } from '../repositories/questions-repository'
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 interface ChooseQuestionBestAnswerUseCaseRequest {

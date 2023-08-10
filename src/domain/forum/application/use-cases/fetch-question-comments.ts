@@ -1,6 +1,6 @@
 import { Either, right } from '@/core/either'
 
-import { QuestionComment } from '../../enterprise/entities/question-comment'
+import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 import { QuestionCommentsRepository } from '../repositories/question-comments-repository'
 
 interface FetchQuestionCommentsRequest {
